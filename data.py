@@ -38,6 +38,21 @@ def load_data(folder='data', base_filename='combined_data_%d.txt', num_files=4, 
 
     return data
 
+def get_best_movie_index(df):
+    return df.groupby('movie_id')['ratings'].agg(['mean'])['mean'].idxmax()
+
+def load_movies(folder='data', filename='movie_titles.csv', col_names=['movie_id', 'date', 'title'], data=None):
+    df = pd.read_csv(
+        os.path.join(folder, filename), header=None, names=col_names, encoding="ISO-8859-1"
+    ).set_index('movie_id')
+
+    if data is not None:
+        mean_by_movies = df.groupby('movie_id')['rating'].agg(['mean'])
+        mean_by_movies.columns = ['mean_rating']
+        df = df.merge(mean_by_movies, on='movie_id')
+    
+    return df
+
 if __name__ == '__main__':
     df = load_data(num_files=1)
     print("Shape of df: ", df.shape)
