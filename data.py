@@ -20,7 +20,7 @@ def load_data(folder='data', base_filename='combined_data_%d.txt', num_files=4, 
     data.index = np.arange(0, len(data))
 
     # Set movie_id column
-    df_nan = pd.DataFrame(pd.isnull(df[ratings]))
+    df_nan = pd.DataFrame(pd.isnull(data[ratings]))
     df_nan = df_nan[df_nan[ratings] == True]
     df_nan = df_nan.reset_index()
     movie_np = []
