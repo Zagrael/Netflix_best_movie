@@ -38,18 +38,18 @@ def load_data(folder='data', base_filename='combined_data_%d.txt', num_files=4, 
 
     f = ['count','mean']
 
-    df_movie_summary = df.groupby('movie_id')['rating'].agg(f)
+    df_movie_summary = data.groupby('movie_id')['rating'].agg(f)
     df_movie_summary.index = df_movie_summary.index.map(int)
     movie_benchmark = round(df_movie_summary['count'].quantile(0.7),0)
     drop_movie_list = df_movie_summary[df_movie_summary['count'] < movie_benchmark].index
 
-    df_cust_summary = df.groupby('user_id')['rating'].agg(f)
+    df_cust_summary = data.groupby('user_id')['rating'].agg(f)
     df_cust_summary.index = df_cust_summary.index.map(int)
     cust_benchmark = round(df_cust_summary['count'].quantile(0.7),0)
     drop_cust_list = df_cust_summary[df_cust_summary['count'] < cust_benchmark].index
 
-    df = df[~df['movie_id'].isin(drop_movie_list)]
-    df = df[~df['user_id'].isin(drop_cust_list)]
+    data = data[~data['movie_id'].isin(drop_movie_list)]
+    data = data[~data['user_id'].isin(drop_cust_list)]
 
     return data
 
