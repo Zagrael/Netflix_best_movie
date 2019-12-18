@@ -19,13 +19,13 @@ def match(V1, V2):
     match_value = compare/len(result)
     return match_value, dist
 
-def mean_notes(id_group, nb_films, groups, user_notes):
+def mean_notes(id_group, nb_films, groups, notes):
     sum = np.zeros(nb_films)
     div = 0
 
     for i in range (0,len(groups[id_group])) :
         # parcourt les id_users
-        sum += user_notes[groups[id_group][i]] 
+        sum += notes[groups[id_group][i]] 
         div += 1
     
     mean = sum/div
