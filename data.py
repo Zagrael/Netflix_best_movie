@@ -19,18 +19,6 @@ def load_data(folder='data', base_filename='combined_data_%d.txt', num_files=4, 
         data = data.append(df)
     data.index = np.arange(0, len(data))
 
-    f = ['count','mean']
-
-    df_movie_summary = df.groupby('Movie_Id')['Rating'].agg(f)
-    df_movie_summary.index = df_movie_summary.index.map(int)
-    movie_benchmark = round(df_movie_summary['count'].quantile(0.7),0)
-    drop_movie_list = df_movie_summary[df_movie_summary['count'] < movie_benchmark].index
-
-    df_cust_summary = df.groupby('Cust_Id')['Rating'].agg(f)
-    df_cust_summary.index = df_cust_summary.index.map(int)
-    cust_benchmark = round(df_cust_summary['count'].quantile(0.7),0)
-    drop_cust_list = df_cust_summary[df_cust_summary['count'] < cust_benchmark].index
-
     # Set movie_id column
     df_nan = pd.DataFrame(pd.isnull(data[ratings]))
     df_nan = df_nan[df_nan[ratings] == True]
@@ -47,6 +35,21 @@ def load_data(folder='data', base_filename='combined_data_%d.txt', num_files=4, 
     data = data[pd.notnull(data[ratings])]
     data['movie_id'] = movie_np.astype(int)
     data[user_id] = data[user_id].astype(int)
+
+    f = ['count','mean']
+
+    df_movie_summary = df.groupby('movie_id')['rating'].agg(f)
+    df_movie_summary.index = df_movie_summary.index.map(int)
+    movie_benchmark = round(df_movie_summary['count'].quantile(0.7),0)
+    drop_movie_list = df_movie_summary[df_movie_summary['count'] < movie_benchmark].index
+
+    df_cust_summary = df.groupby('user_id')['rating'].agg(f)
+    df_cust_summary.index = df_cust_summary.index.map(int)
+    cust_benchmark = round(df_cust_summary['count'].quantile(0.7),0)
+    drop_cust_list = df_cust_summary[df_cust_summary['count'] < cust_benchmark].index
+
+    df = df[~df['movie_id'].isin(drop_movie_list)]
+    df = df[~df['user_id'].isin(drop_cust_list)]
 
     return data
 
