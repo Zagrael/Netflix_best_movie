@@ -49,8 +49,8 @@ def get_movies_summaries(data=None, with_titles=True, folder='data', filename='m
             os.path.join(folder, filename), header=None, names=col_names, encoding="ISO-8859-1"
         ).set_index('movie_id')
     elif data is not None and with_titles:
-        return df.groupby('movie_id')['rating']
-            .agg(['mean','count'])
+        return df.groupby('movie_id')['rating'] \
+            .agg(['mean','count']) \
             .merge(
                 pd.read_csv(
                     os.path.join(folder, filename), header=None, names=col_names, encoding="ISO-8859-1"
