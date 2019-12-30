@@ -58,13 +58,13 @@ def get_best_movie_index(df):
 
 def get_movies_summaries(data=None, with_titles=True, folder='data', filename='movie_titles.csv', col_names=['movie_id', 'date', 'title']):
     if data is not None and not with_titles:
-        return df.groupby('movie_id')['rating'].agg(['mean','count'])
+        return data.groupby('movie_id')['rating'].agg(['mean','count'])
     elif data is None and with_titles:
         return pd.read_csv(
             os.path.join(folder, filename), header=None, names=col_names, encoding="ISO-8859-1"
         ).set_index('movie_id')
     elif data is not None and with_titles:
-        return df.groupby('movie_id')['rating'] \
+        return data.groupby('movie_id')['rating'] \
             .agg(['mean','count']) \
             .merge(
                 pd.read_csv(
